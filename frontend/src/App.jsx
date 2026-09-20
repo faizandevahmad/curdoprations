@@ -91,7 +91,7 @@ export default function App() {
   return (
     <div className="page">
       <header className="hero">
-        <p className="brand">Task Board</p>
+        <p className="brand">Task Board New Changes</p>
         <h1>Plan the next thing you ship.</h1>
         <p className="lede">
           A tiny full-stack demo: React frontend, Node API, SQLite — all running
