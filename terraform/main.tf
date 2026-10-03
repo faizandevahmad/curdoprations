@@ -29,11 +29,11 @@ resource "aws_security_group" "backend_sg" {
   description = "Allow SSH and app traffic"
 
   ingress {
-    description = "SSH"
+    description = "SSH (GitHub Actions deploy + your PC)"
     from_port   = 22
     to_port     = 22
     protocol    = "tcp"
-    cidr_blocks = [var.my_ip]
+    cidr_blocks = ["0.0.0.0/0"]
   }
 
   ingress {

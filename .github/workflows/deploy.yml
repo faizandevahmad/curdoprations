@@ -22,9 +22,9 @@ jobs:
           script_stop: true
           script: |
             set -e
-            cd ~/curdoprations
+            cd ~/app
             git fetch origin main
             git reset --hard origin/main
-            docker compose up --build -d
+            docker compose up --build -d --force-recreate
             docker compose ps
             curl -fsS http://127.0.0.1:3000/api/health

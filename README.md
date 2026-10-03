@@ -63,13 +63,13 @@ Add these repository secrets (**Settings → Secrets and variables → Actions**
 
 | Secret | Value |
 |--------|--------|
-| `EC2_HOST` | `13.60.37.239` |
+| `EC2_HOST` | `13.51.79.158` |
 | `EC2_USER` | `ubuntu` |
 | `EC2_SSH_KEY` | Full contents of your `.pem` private key |
 
 Workflow file: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
 
-Security group must allow **SSH (22)** from GitHub Actions (or `0.0.0.0/0` for simplicity) and **TCP 3000** for the app.
+This deploys to the Terraform instance (`~/app`). Security group must allow **SSH (22)** from GitHub Actions (`0.0.0.0/0` for this demo) and **TCP 3000** for the app.
 
 ## Terraform (AWS EC2)
 
