@@ -70,3 +70,54 @@ Add these repository secrets (**Settings → Secrets and variables → Actions**
 Workflow file: [`.github/workflows/deploy.yml`](.github/workflows/deploy.yml)
 
 Security group must allow **SSH (22)** from GitHub Actions (or `0.0.0.0/0` for simplicity) and **TCP 3000** for the app.
+
+## Terraform (AWS EC2)
+
+Creates an Ubuntu EC2 instance, installs Docker on first boot, clones this repo, and runs `docker compose`.
+
+**Never put AWS access keys in `.tf` files.** Use `aws configure` (or env vars). Never commit `terraform.tfvars`, `*.tfstate`, or `*.pem`.
+
+```powershell
+cd terraform
+copy terraform.tfvars.example terraform.tfvars
+# edit key_name, my_ip (your public IP/32), repo_url
+
+terraform init
+terraform plan
+terraform apply
+```
+
+After apply, open the printed `app_url` (`http://<public_ip>:3000`). First boot takes a few minutes (`sudo tail -f /var/log/cloud-init-output.log` on the instance).
+
+Tear down when finished so you are not billed:
+
+```powershell
+terraform destroy
+```
+
+## Security pipeline (DevSecOps)
+
+On every push/PR, [`.github/workflows/security.yml`](.github/workflows/security.yml) scans:
+
+| Tool | What it scans |
+|------|----------------|
+| Gitleaks | Secrets / hardcoded passwords in git history |
+| Semgrep | Vulnerabilities in application source |
+| Trivy (fs) | Vulnerable dependencies in the repo |
+| Trivy (image) | CVEs in backend and frontend Docker images |
+| Trivy (config) | Misconfigurations in `terraform/` |
+| tfsec | Terraform infrastructure issues |
+
+Jobs use `continue-on-error: true` so they **warn first** and do not block the build. Remove that later to fail on findings.
+
+Local Terraform scan (from `terraform/`):
+
+```powershell
+docker run --rm -v "${PWD}:/src" aquasec/tfsec /src
+```
+
+Local Trivy config scan:
+
+```powershell
+docker run --rm -v "${PWD}:/src" aquasec/trivy config /src
+```

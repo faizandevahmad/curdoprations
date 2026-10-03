@@ -1,0 +1,8 @@
+# Local / extra ignore rules for Gitleaks.
+# terraform.tfvars is already gitignored; this is a backup.
+[allowlist]
+  paths = [
+    '''terraform/terraform.tfvars''',
+    '''.*\.tfstate$''',
+    '''.*\.pem$''',
+  ]
