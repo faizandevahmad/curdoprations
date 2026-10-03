@@ -16,9 +16,10 @@ curl -fsSL https://get.docker.com | sh
 # 2) Let the 'ubuntu' user run docker without sudo
 usermod -aG docker ubuntu
 
-# 3) Clone the repo and start the app
+# 3) Clone the repo and start the app as ubuntu
 cd /home/ubuntu
 git clone ${repo_url} app
+chown -R ubuntu:ubuntu /home/ubuntu/app
 cd app
 docker compose up -d --build
 
